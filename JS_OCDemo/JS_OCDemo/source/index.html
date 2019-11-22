@@ -1,0 +1,44 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Js OC 互相联调</title>
+        <script type="text/javascript">
+
+        clickBtn1 = function() {
+            showMessage(name);
+        }
+        
+        addItems2 = function(title){
+            var body = document.getElementById("body");
+            var button = document.createElement("button");
+            button.innerText = title;
+            body.appendChild(button);
+            alert(title);
+        }
+
+        addItems = function(title){
+            var body = document.getElementById("body");
+            var button = document.createElement("button");
+            button.innerText = ocModel["name"];
+            button.onclick = jumpToWk;
+            body.appendChild(button);
+            
+            ocModel.logTheName();
+            ocModel.getSum(10,"vbbc");
+        }
+        
+        messageHandle = function() {
+            window.webKit.messageHandlers.messageOC.postMessage("this is messageOC message");
+        }
+        
+        window.onload = function(){
+            var btn = document.getElementById("btn1");
+            btn.onclick = clickBtn1;
+        }
+        </script>
+    </head>
+    <body id = "body">
+        <button id="btn1"> 点击了试试 </button>
+    </body>
+</html>

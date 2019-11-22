@@ -1,0 +1,129 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JsBrigeExample</title>
+
+        <style>
+            *{
+                padding: 0;
+                margin: 0;
+            }
+            #jsSendMessage {
+                margin-top: 20px;
+                margin-left: 10px;
+                display: block;
+                width: 40%;
+                height: 40px;
+                font-size: 18px;
+                background-color: teal;
+                color: white;
+                border-radius: 10px;
+            }
+            #imgs {
+                background-color: skyblue;
+                border: slategray solid 3px;
+                margin: 10px 0;
+            }
+            #img1 {
+                background-color: gray;
+                border: white solid 2px;
+                margin: 10px 10px;
+                width: 100px;
+                height: 100px;
+            }
+
+            #img2 {
+                background-color: blueviolet;
+                border: white solid 1px;
+                margin: 10px 10px;
+                width: 100px;
+                height: 100px;
+            }
+
+            #img3 {
+                background-color: violet;
+                border: white solid 1px;
+                margin: 10px 10px;
+                width: 100px;
+                height: 100px;
+            }
+        </style>
+
+        <script>
+function setupWebViewJavascriptBridge(callback) {
+        if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+        if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+        window.WVJBCallbacks = [callback];
+        var WVJBIframe = document.createElement('iframe');
+        WVJBIframe.style.display = 'none';
+        WVJBIframe.src = 'https://__bridge_loaded__';
+        document.documentElement.appendChild(WVJBIframe);
+        setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+    }
+
+    setupWebViewJavascriptBridge(function(bridge) {
+
+        bridge.registerHandler('addText', function(data, responseCallback) {
+                var body = document.getElementById("body");
+                var h1 = document.createElement("h3");
+                h1.innerText = data;
+                body.appendChild(h1);
+                var responseData = { 'Javascript Says':'Right back atcha!' }
+                responseCallback(responseData)
+        })
+        bridge.registerHandler('setImage', function(data, responseCallback) {
+            var index = data["index"];
+            var basedata = data["data"];
+            var imgId = "img" + index;
+            var img = document.getElementById(imgId);
+            img.src = 'data:image/png;base64,'+ basedata;
+        })
+        var callbackButton = document.getElementById('jsSendMessage');
+        callbackButton.onclick = function() {
+            bridge.callHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
+                log('JS got response', response)
+            })
+        }
+        
+        var aImage1 = document.getElementById("aImg1");
+        aImage1.onclick = function(){
+            bridge.callHandler('openAblum', {'index': '1'}, function(response) {
+            });
+        }
+
+        var aImage2 = document.getElementById("aImg2");
+        aImage2.onclick = function(){
+            bridge.callHandler('openAblum', {'index': '2'}, function(response) {
+            });
+        }
+
+        var aImage3 = document.getElementById("aImg3");
+        aImage3.onclick = function(){
+            bridge.callHandler('openAblum', {'index': '3'}, function(response) {
+            });
+        }
+    })
+    // window.onload = function(){
+    //     var aImage1 = document.getElementById("aImg1");
+    //     aImage1.onclick = function(){
+    //         // bridge.callHandler('openAblum', {'index': i}, function(response) {
+    //         // });
+    //             alert(1);
+    //     }
+    // }
+    
+   
+        </script>
+    </head>
+    <body id = "body">
+        <div >
+            <button id = "jsSendMessage">JS发送Json到OC</button>
+        </div>
+        <div id="imgs">
+            <a id="aImg1" href="javascript:;"><img id="img1" /></a>
+            <a id="aImg2" href="javascript:;"><img id="img2" /></a>
+            <a id="aImg3" href="javascript:;"><img id="img3" /></a>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,7 @@
+platform :ios,'10.0'
+
+target 'JS_OCDemo' do
+
+pod 'WebViewJavascriptBridge', '~> 6.0'
+
+end
